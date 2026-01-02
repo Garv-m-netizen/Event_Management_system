@@ -21,11 +21,6 @@ function Register() {
   async function handleSubmit(e) {
   e.preventDefault();
 
-  const validationErrors = validate();
-  setErrors(validationErrors);
-
-  if (Object.keys(validationErrors).length !== 0) return;
-
   try {
     const response = await fetch(
       "https://symmetrical-funicular-pjpvrjpxxrrqfqg7-8000.app.github.dev/register",
@@ -39,13 +34,19 @@ function Register() {
     );
 
     const data = await response.json();
-    console.log("Backend response:", data);
+
+    if (!response.ok) {
+      alert(data.detail || "Registration failed");
+      return;
+    }
+
     alert("Registration successful!");
-  } catch (error) {
-    console.error("Error:", error);
-    alert("Something went wrong");
+  } catch (err) {
+    console.error(err);
+    alert("Backend not reachable");
   }
 }
+
 
   function validate() {
     const newErrors = {};
